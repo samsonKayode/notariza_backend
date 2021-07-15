@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+    
+    <property resource="application.properties" />
+        <springProperty name="password" source="spring.datasource.password"/>
+    <springProperty name="url" source="spring.datasource.url"/>
+    <springProperty name="username" source="spring.datasource.username"/>
+    <springProperty name="driver" source="spring.datasource.driver-class-name"/>
+    
+    <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource
+            class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>${driver}</driverClass>
+            <url>${url}</url>
+            <user>${username}</user>
+            <password>${password}</password> <!-- no password -->
+        </connectionSource>
+    </appender>
+ 
+<logger name="com.backend.notariza" level="debug"/>
+    <!-- the level of the root level is set to DEBUG by default. -->
+    <root level="debug">
+        <appender-ref ref="stdout" />
+    </root>
+    
+     <root level="error">
+        <appender-ref ref="db" />
+        <appender-ref ref="stdout" />
+        </root>
+    
+</configuration>
