@@ -11,7 +11,9 @@ public class DashBoardListDTO {
 	private String reference;
 	
 	private Date date;
-	
+
+	private String status;
+
 	private int customerID;
 	
 	public DashBoardListDTO() {
@@ -57,7 +59,12 @@ public class DashBoardListDTO {
 	public void setCustomerID(int customerID) {
 		this.customerID = customerID;
 	}
-	
-	
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

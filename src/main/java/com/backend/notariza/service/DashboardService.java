@@ -34,6 +34,8 @@ public class DashboardService {
 
 	String reference;
 
+	String status;
+
 	int customerID;
 
 	int sn = 0;
@@ -60,6 +62,7 @@ public class DashboardService {
 			service = paymentEntity.getService();
 			reference = paymentEntity.getReference();
 			customerID = currentUser.getUserId();
+			status = paymentEntity.getStatus();
 
 			dashBoardList = new DashBoardListDTO();
 
@@ -68,6 +71,7 @@ public class DashboardService {
 			dashBoardList.setReference(reference);
 			dashBoardList.setService(service);
 			dashBoardList.setId(sn);
+			dashBoardList.setStatus(status);
 
 			arrayList.add(dashBoardList);
 		}
@@ -98,6 +102,7 @@ public class DashboardService {
 			service = paymentEntity.getService();
 			reference = paymentEntity.getReference();
 			customerID = currentUser.getUserId();
+			status = paymentEntity.getStatus();
 
 			dashBoardList = new DashBoardListDTO();
 
@@ -106,6 +111,8 @@ public class DashboardService {
 			dashBoardList.setReference(reference);
 			dashBoardList.setService(service);
 			dashBoardList.setId(sn);
+
+			dashBoardList.setStatus(status);
 
 			arrayList.add(dashBoardList);
 		}

@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,7 @@ import com.backend.notariza.util.NotaryCertificate;
 import com.backend.notariza.util.RandomReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class NotarizeDocumentService {
@@ -99,6 +101,9 @@ public class NotarizeDocumentService {
 
 	@Autowired
 	SendEmailService sendEmail;
+
+	@Autowired
+	RestTemplate restTemplate;
 	
 	String referenceNumber=null;
 
@@ -129,10 +134,6 @@ public class NotarizeDocumentService {
 
 		RandomReference random = new RandomReference();
 
-		// FileInputStream fos = new
-		// FileInputStream(notarizeDocumentEntity.getFile().getInputStream());
-
-		// log.info("FILE PATH======>"+)
 
 		Resource mpf = notarizeDocumentEntity.getFile().getResource();
 
@@ -160,49 +161,29 @@ public class NotarizeDocumentService {
 
 		InitializeTransactionResponse initializeTransactionResponse = null;
 
-		try {
-			// convert transaction to json then use it as a body to post json
-			Gson gson = new Gson();
-			// add paystack chrges to the amoun
+		try{
 
 			request.setReference(referenceNumber);
 			request.setCallback_url(base_url + "/v1/service/notarizedocument/savetransaction/" + request.getReference());
-
 			request.setAmount(pages * serviceCost * 100);
-
 			request.setEmail(currentUser.getUsername());
 
-			StringEntity postingString = new StringEntity(gson.toJson(request));
-			HttpClient client = HttpClientBuilder.create().build();
-			HttpPost post = new HttpPost("https://api.paystack.co/transaction/initialize");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer "+secretKey);
 
-			post.setEntity(postingString);
-			post.addHeader("Content-type", "application/json");
-			post.addHeader("Authorization", "Bearer " + secretKey);
-			StringBuilder result = new StringBuilder();
-			HttpResponse response = client.execute(post);
+			HttpEntity<InitializeTransactionRequest> httpEntity = new HttpEntity<>(request, headers);
 
-			int STATUSR = response.getStatusLine().getStatusCode();
+			ResponseEntity<?> responseEntity =
+					restTemplate.exchange("https://api.paystack.co/transaction/initialize", HttpMethod.POST, httpEntity, InitializeTransactionResponse.class);
 
-			if (response.getStatusLine().getStatusCode() == STATUS_CODE_OK) {
-				BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			initializeTransactionResponse  = (InitializeTransactionResponse) responseEntity.getBody();
 
-				String line;
-				while ((line = rd.readLine()) != null) {
-					result.append(line);
-				}
-
-			} else {
-				throw new Exception(
-						"Error Occurred while initializing transaction : STATUS RESPONSE ====>>>" + STATUSR);
-			}
-			ObjectMapper mapper = new ObjectMapper();
-
-			initializeTransactionResponse = mapper.readValue(result.toString(), InitializeTransactionResponse.class);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			// throw new Exception("Failure initializaing paystack transaction");
+		}catch (Exception exception){
+			log.error("Error initializing transaction: {}"+exception.getLocalizedMessage());
+			throw new RuntimeException("Error initializing transaction: {}"+exception.getLocalizedMessage());
 		}
+
 		return initializeTransactionResponse;
 	}
 

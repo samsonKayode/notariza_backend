@@ -52,15 +52,27 @@ public class AwsRest {
     
     //download file for users
     @GetMapping(value= "/v1/service/files/download")
-    public ResponseEntity<ByteArrayResource> downloadFileUser(@RequestParam(value= "fileName") final String keyName) {
-        final byte[] data = awsService.downloadFile(keyName);
-        final ByteArrayResource resource = new ByteArrayResource(data);
-        return ResponseEntity
-                .ok()
-                .contentLength(data.length)
-                .header("Content-type", "application/pdf")
-                .header("Content-disposition", "attachment; filename=\"" + keyName + "\"")
-                .body(resource);
+    public ResponseEntity<?> downloadFileUser(@RequestParam(value= "fileName") final String keyName) {
+
+        String status = awsVerification.check(keyName);
+        if(status.equals("GRANTED")){
+
+            final byte[] data = awsService.downloadFile(keyName);
+            final ByteArrayResource resource = new ByteArrayResource(data);
+            return ResponseEntity
+                    .ok()
+                    .contentLength(data.length)
+                    .header("Content-type", "application/pdf")
+                    .header("Content-disposition", "attachment; filename=\"" + keyName + "\"")
+                    .body(resource);
+
+        }else{
+            ActionResult ar = new ActionResult(1,"Authorization Error: YOU ARE NOT ALLOWED TO ACCESS THIS FILE", System.currentTimeMillis());
+
+            return ResponseEntity.ok().body(ar);
+        }
+
+
     }
     
     //Display file for admin...

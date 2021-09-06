@@ -32,6 +32,7 @@ public class ValidationExceptions {
 
 	// General Exception..
 
+	/*
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleSQLExceptions(Exception ex) {
 
@@ -46,6 +47,8 @@ public class ValidationExceptions {
 
 		return new ResponseEntity<>(errors, HttpStatus.BAD_GATEWAY);
 	}
+
+	*/
 	
 	//Verification Expired exception...
 	

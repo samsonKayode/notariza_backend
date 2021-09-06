@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import com.backend.notariza.dao.ChangeOfNameRepo;
@@ -35,6 +36,7 @@ import com.backend.notariza.util.ChangeOfNamePDF;
 import com.backend.notariza.util.RandomReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ChangeOfNameService {
@@ -73,6 +75,9 @@ public class ChangeOfNameService {
 
 	@Autowired
 	SendEmailService sendEmailService;
+
+	@Autowired
+	RestTemplate restTemplate;
 
 	int serviceCost = 0;
 
@@ -133,6 +138,31 @@ public class ChangeOfNameService {
 
 		InitializeTransactionResponse initializeTransactionResponse = null;
 
+		try{
+
+			request.setReference(referenceNumber);
+			request.setCallback_url(base_url + "/v1/service/changeofname/savetransaction/" + request.getReference());
+			request.setAmount(serviceCost * 100);
+			request.setEmail(currentUser.getUsername());
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer "+secretKey);
+
+			HttpEntity<InitializeTransactionRequest> httpEntity = new HttpEntity<>(request, headers);
+
+			ResponseEntity<?> responseEntity =
+					restTemplate.exchange("https://api.paystack.co/transaction/initialize", HttpMethod.POST, httpEntity, InitializeTransactionResponse.class);
+
+			initializeTransactionResponse  = (InitializeTransactionResponse) responseEntity.getBody();
+
+		}catch (Exception exception){
+			log.error("Error initializing transaction: {}"+exception.getLocalizedMessage());
+			throw new RuntimeException("Error initializing transaction: {}"+exception.getLocalizedMessage());
+		}
+
+		/*
+
 		try {
 			// convert transaction to json then use it as a body to post json
 			Gson gson = new Gson();
@@ -140,9 +170,6 @@ public class ChangeOfNameService {
 
 			request.setReference(referenceNumber);
 			request.setCallback_url(base_url + "/v1/service/changeofname/savetransaction/" + request.getReference());
-
-			// request.setCallback_url(base_url + "/v1/payment/verifytransaction/" +
-			// request.getReference());
 
 			request.setAmount(serviceCost * 100);
 
@@ -181,6 +208,8 @@ public class ChangeOfNameService {
 			ex.printStackTrace();
 			// throw new Exception("Failure initializaing paystack transaction");
 		}
+
+		 */
 
 		return initializeTransactionResponse;
 	}

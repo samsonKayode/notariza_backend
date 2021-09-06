@@ -2,6 +2,8 @@ package com.backend.notariza.rest;
 
 import java.util.List;
 
+import com.backend.notariza.dto.ServiceNumbersDTO;
+import com.backend.notariza.service.DashboardNumbersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +22,18 @@ public class UserServiceHistoryRest {
 	@Autowired
 	DashboardService dashboardService;
 
+	@Autowired
+	DashboardNumbersService dashboardNumbersService;
+
 	@GetMapping("/list")
 	public List<DashBoardListDTO> getUserHistory() {
 
 		return dashboardService.getListForCurrentUser();
+	}
+
+	@GetMapping("/data")
+	public List<ServiceNumbersDTO> getData(){
+		return dashboardNumbersService.getData();
 	}
 
 	@GetMapping("/user")
