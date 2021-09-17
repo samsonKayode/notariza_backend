@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.Date;
 
+import com.backend.notariza.util.DocumentResources;
+import com.backend.notariza.util.DocumentResourcesListPojo;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -52,6 +54,11 @@ public class ChangeOfNameService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	DocumentResources documentResources;
+
+	DocumentResourcesListPojo documentResourcesListPojo;
 
 	RandomReference randomReference = new RandomReference();
 
@@ -217,6 +224,7 @@ public class ChangeOfNameService {
 	// verify and save transaction..
 
 	public PaymentEntity verifyTransactionToSave(String reference) throws Exception {
+
 		VerifyTransactionResponse paystackresponse;
 		PaymentEntity paymentEntity = null;
 
@@ -299,6 +307,13 @@ public class ChangeOfNameService {
 
 	public void updateAfterPayment(String reference) {
 
+		try{
+			documentResourcesListPojo = documentResources.getData();
+			log.info("bytes gotten");
+		}catch(Exception e){
+			log.error("COULD NOT GET BYTES==="+e.getLocalizedMessage());
+		}
+
 		ChangeOfNameEntity cone = changeOfNameRepo.findByReference(reference);
 
 		UserEntity userEntity = cone.getUserEntity();
@@ -318,7 +333,7 @@ public class ChangeOfNameService {
 			System.out.println("Filename2 ChangeOfNameService=========>" + tmpDirsLocation + reference);
 
 			generatePDF.getPDFDocument(tmpDirsLocation + reference, cone.getFormer_name(), newName, cone.getAddress(),
-					cone.getSex(), notaryName);
+					cone.getSex(), notaryName, documentResourcesListPojo);
 
 			log.info("File " + reference + ".pdf generated");
 			log.info("File saved to temp folder " + tmpDirsLocation);

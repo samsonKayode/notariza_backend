@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.backend.notariza.util.DocumentResources;
+import com.backend.notariza.util.DocumentResourcesListPojo;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -55,6 +57,11 @@ public class GiftDeedService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	DocumentResources documentResources;
+
+	DocumentResourcesListPojo documentResourcesListPojo;
 
 	RandomReference randomReference = new RandomReference();
 
@@ -252,6 +259,13 @@ public class GiftDeedService {
 	// update payment data..
 
 	public void updateAfterPayment(String reference) {
+
+		try{
+			documentResourcesListPojo = documentResources.getData();
+			log.info("bytes gotten");
+		}catch(Exception e){
+			log.error("COULD NOT GET BYTES==="+e.getLocalizedMessage());
+		}
 		
 		GiftDeedEntity giftDeedEntity = giftRepo.findByReference(reference);
 		
@@ -301,7 +315,7 @@ public class GiftDeedService {
 
 		giftDeedPDF = new GiftDeedPDF();
 
-		giftDeedPDF.getPDFDocument(filename, giftDeedEntity, notaryName);
+		giftDeedPDF.getPDFDocument(filename, giftDeedEntity, notaryName, documentResourcesListPojo);
 
 	}
 

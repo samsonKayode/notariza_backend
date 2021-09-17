@@ -47,7 +47,8 @@ public class ChangeOfNamePDF {
 
 	String documentHeader = "SWORN AFFIDAVIT OF CHANGE OF NAME";
 	
-	public void getPDFDocument(String filename, String oldName, String newName, String address, String sex, String notaryName) throws Exception {
+	public void getPDFDocument(String filename, String oldName, String newName, String address,
+                               String sex, String notaryName, DocumentResourcesListPojo documentResourcesListPojo) throws Exception {
 		
 		//filename = tmpDirsLocation+filename;
 		
@@ -220,6 +221,7 @@ public class ChangeOfNamePDF {
 
         
 
+        /*
 		String tmpDirsLocation = System.getProperty("java.io.tmpdir")+"/";
 		RandomReference random = new RandomReference();
         
@@ -227,12 +229,11 @@ public class ChangeOfNamePDF {
         
 		File file1 = new File(tmpDirsLocation+random.getAlphaNumericString(10)+".png");
 		Files.copy(resource1.getInputStream(), file1.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        
-
 		String filePath1 = file1.getAbsolutePath();
+        */
 
 		Paragraph pSig = new Paragraph();
-		Image img1 = new Image(ImageDataFactory.create(filePath1));
+		Image img1 = new Image(ImageDataFactory.create(documentResourcesListPojo.getSignature()));
 		img1.getAccessibilityProperties().setAlternateDescription("notary signature");
 		pSig.add(img1);
 		
@@ -240,7 +241,7 @@ public class ChangeOfNamePDF {
 		
 		pSig.setTextAlignment(TextAlignment.LEFT);
 
-		
+		/*
 		Resource resource2 = new ClassPathResource("notariza_stamp1.png");
 		File file2 = new File(tmpDirsLocation+random.getAlphaNumericString(10)+".png");
 		Files.copy(resource2.getInputStream(), file2.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -248,20 +249,25 @@ public class ChangeOfNamePDF {
 		
 		String filePath2 = file2.getAbsolutePath();
 
+
+		 */
+
 		Paragraph pStamp1 = new Paragraph();
-		Image img2 = new Image(ImageDataFactory.create(filePath2));
+		Image img2 = new Image(ImageDataFactory.create(documentResourcesListPojo.getStamp1()));
 		img2.getAccessibilityProperties().setAlternateDescription("notary stamp");
 		pStamp1.add(img2);
 		
-		
+		/*
 		Resource resource3 = new ClassPathResource("notariza_seal_red.png");
 		File file3 = new File(tmpDirsLocation+random.getAlphaNumericString(10)+".png");
 		Files.copy(resource3.getInputStream(), file3.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 		String filePath3 = file3.getAbsolutePath();
-		
+
+
+		 */
 		Paragraph pSeal = new Paragraph();
-		Image img3 = new Image(ImageDataFactory.create(filePath3));
+		Image img3 = new Image(ImageDataFactory.create(documentResourcesListPojo.getRedSeal()));
 		img3.getAccessibilityProperties().setAlternateDescription("notary seal");
 		pSeal.add(img2).add(img3);
 		
@@ -281,7 +287,8 @@ public class ChangeOfNamePDF {
         document.add(pSeal);
         
         //delete temp files...
-        
+
+        /*
         try {
         	
         	file1.delete();
@@ -291,6 +298,7 @@ public class ChangeOfNamePDF {
         }catch(Exception nn) {
         	
         }
+        */
         
         /*
         AreaBreak aB = new AreaBreak();

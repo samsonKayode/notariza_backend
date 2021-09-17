@@ -107,7 +107,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 			
 			Set<Role> arrayList = new HashSet<Role>();
 			 
-			 Role newRole = roleRepo.findByName("USER");
+			 Role newRole = roleRepo.findByName("GENERAL USER");
 			 
 			 arrayList.add(newRole);
 
@@ -176,7 +176,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 			
 			Set<Role> arrayList = new HashSet<Role>();
 			 
-			 Role newRole = roleRepo.findByName("USER");
+			 Role newRole = roleRepo.findByName("GENERAL USER");
 			 
 			 arrayList.add(newRole);
 

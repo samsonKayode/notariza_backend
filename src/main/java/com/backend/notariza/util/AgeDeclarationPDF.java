@@ -32,6 +32,8 @@ import com.itextpdf.layout.property.TextAlignment;
 public class AgeDeclarationPDF {
 	DateFormatTH dateFormat = new DateFormatTH();
 
+	DocumentResources documentResources = new DocumentResources();
+
 	PdfFont font;
 
 	String content1 = "I hereby certify and attest as a duly authorized, appointed and practicing Notary Public of "
@@ -43,7 +45,7 @@ public class AgeDeclarationPDF {
 
 	String documentHeader = "AFFIDAVIT FOR DECLARATION OF AGE";
 
-	public void getPDFDocument(String filename, AgeDeclarationEntity ageEntity, String notaryName) throws Exception {
+	public void getPDFDocument(String filename, AgeDeclarationEntity ageEntity, String notaryName, DocumentResourcesListPojo documentResourcesListPojo) throws Exception {
 
 		// filename = tmpDirsLocation+filename;
 
@@ -248,6 +250,7 @@ public class AgeDeclarationPDF {
 
 		document.add(dates);
 
+		/*
 		String tmpDirsLocation = System.getProperty("java.io.tmpdir")+"/";
 
 		Resource resource1 = new ClassPathResource("notariza_signature.png");
@@ -258,33 +261,41 @@ public class AgeDeclarationPDF {
 		Files.copy(resource1.getInputStream(), file1.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		String filePath1 = file1.getAbsolutePath();
 
+
+		 */
+
 		Paragraph pSig = new Paragraph();
-		Image img1 = new Image(ImageDataFactory.create(filePath1));
+		Image img1 = new Image(ImageDataFactory.create(documentResourcesListPojo.getSignature()));
 		img1.getAccessibilityProperties().setAlternateDescription("notary signature");
 		pSig.add(img1);
 
 		img1.setMaxWidth(150);
-
 		pSig.setTextAlignment(TextAlignment.LEFT);
 
+		/*
 		Resource resource2 = new ClassPathResource("notariza_stamp1.png");
 		File file2 = new File(tmpDirsLocation+random.getAlphaNumericString(10)+".png");
 		Files.copy(resource2.getInputStream(), file2.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		
 		String filePath2 = file2.getAbsolutePath();
 
+		 */
+
 		Paragraph pStamp1 = new Paragraph();
-		Image img2 = new Image(ImageDataFactory.create(filePath2));
+		Image img2 = new Image(ImageDataFactory.create(documentResourcesListPojo.getStamp1()));
 		img2.getAccessibilityProperties().setAlternateDescription("notary stamp");
 		pStamp1.add(img2);
 
+		/*
 		Resource resource3 = new ClassPathResource("notariza_seal_red.png");
 		File file3 = new File(tmpDirsLocation+random.getAlphaNumericString(10)+".png");
 		Files.copy(resource3.getInputStream(), file3.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		String filePath3 = file3.getAbsolutePath();
 
+		 */
+
 		Paragraph pSeal = new Paragraph();
-		Image img3 = new Image(ImageDataFactory.create(filePath3));
+		Image img3 = new Image(ImageDataFactory.create(documentResourcesListPojo.getRedSeal()));
 		img3.getAccessibilityProperties().setAlternateDescription("notary seal");
 		pSeal.add(img2).add(img3);
 
@@ -302,16 +313,6 @@ public class AgeDeclarationPDF {
 
 		document.add(pSig);
 		document.add(pSeal);
-		
-        try {
-        	
-        	file1.delete();
-        	file2.delete();
-        	file3.delete();
-        	
-        }catch(Exception nn) {
-        	
-        }
 
 		document.close();
 

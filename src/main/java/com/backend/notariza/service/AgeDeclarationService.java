@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.Date;
 
+import com.backend.notariza.util.DocumentResources;
+import com.backend.notariza.util.DocumentResourcesListPojo;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -57,6 +59,11 @@ public class AgeDeclarationService {
 	CurrentUser currentUser;
 
 	RandomReference randomReference = new RandomReference();
+
+	@Autowired
+	DocumentResources documentResources;
+
+	DocumentResourcesListPojo documentResourcesListPojo;
 
 	private static final int STATUS_CODE_OK = 200;
 	@Value("${paystack.testkey}")
@@ -249,6 +256,13 @@ public class AgeDeclarationService {
 
 	public void updateAfterPayment(String reference) {
 
+		try{
+			documentResourcesListPojo = documentResources.getData();
+			log.info("bytes gotten");
+		}catch(Exception e){
+			log.error("COULD NOT GET BYTES==="+e.getLocalizedMessage());
+		}
+
 		AgeDeclarationEntity ageDeclarationEntity = ageDeclarationRepo.findByReference(reference);
 
 		UserEntity userEntity = ageDeclarationEntity.getUserEntity();
@@ -260,7 +274,7 @@ public class AgeDeclarationService {
 		ageDeclarationRepo.save(ageDeclarationEntity);
 
 		try {
-			generatePDF.getPDFDocument(tmpDirsLocation + reference, ageDeclarationEntity, notaryName);
+			generatePDF.getPDFDocument(tmpDirsLocation + reference, ageDeclarationEntity, notaryName, documentResourcesListPojo);
 
 			File newFile = new File(tmpDirsLocation + reference + ".pdf");
 			awsService.uploadFile(newFile);

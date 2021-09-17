@@ -69,7 +69,8 @@ public class NotarizeDocumentUtil {
 		Files.copy(resource1.getInputStream(), file1.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		String filePath1 = file1.getAbsolutePath();
 		PDImageXObject pdfSig = PDImageXObject.createFromFile(filePath1, doc);
-		
+
+
 		float newHeight1 = height - 80;
 		image.drawImage(pdfSig, width - 120, height - newHeight1, 100, 100);
 		System.out.println("Signature Inserted");

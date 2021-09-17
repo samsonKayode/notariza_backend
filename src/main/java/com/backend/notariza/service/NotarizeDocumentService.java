@@ -10,8 +10,6 @@ import java.util.Date;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +36,8 @@ import com.backend.notariza.paystack.InitializeTransactionResponse;
 import com.backend.notariza.paystack.VerifyTransactionResponse;
 import com.backend.notariza.service.custom.AWSS3Service;
 import com.backend.notariza.util.NotarizeDocumentUtil;
-import com.backend.notariza.util.NotaryCertificate;
 import com.backend.notariza.util.RandomReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -85,8 +81,6 @@ public class NotarizeDocumentService {
 	int pages;
 
 	String filePath;
-
-	NotaryCertificate notaryCertificate = new NotaryCertificate();
 
 	NotarizeDocumentUtil notarizeDocumentItil = new NotarizeDocumentUtil();
 
