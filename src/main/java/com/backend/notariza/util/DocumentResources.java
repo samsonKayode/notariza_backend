@@ -30,11 +30,11 @@ public class DocumentResources {
         List<DocumentResourcesListPojo> list = new ArrayList<>();
         DocumentResourcesListPojo documentResourcesListPojo = new DocumentResourcesListPojo();
         try{
-            byte[] signature = awsService.downloadFile("notariza_signature.png");
-            byte[] stamp1 = awsService.downloadFile("notariza_stamp1.png");
-            byte[] redSeal = awsService.downloadFile("notariza_seal_red.png");
-            byte[] plainSeal = awsService.downloadFile("notariza_seal.png");
-            byte[] ctc = awsService.downloadFile("notariza_stamp_ctc.png");
+            byte[] signature = awsService.downloadFile("resources/notariza_signature.png");
+            byte[] stamp1 = awsService.downloadFile("resources/notariza_stamp1.png");
+            byte[] redSeal = awsService.downloadFile("resources/notariza_seal_red.png");
+            byte[] plainSeal = awsService.downloadFile("resources/notariza_seal.png");
+            byte[] ctc = awsService.downloadFile("resources/notariza_stamp_ctc.png");
 
             documentResourcesListPojo.setCtc(ctc);
             documentResourcesListPojo.setPlainSeal(plainSeal);

@@ -17,6 +17,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="age_declaration")
@@ -51,8 +52,9 @@ public class AgeDeclarationEntity {
 	private String  sex;
 	
 	@NotNull(message = "owner status is mandatory")
-	@Column(name="owner")
-	private boolean owner;
+	@Column(name="owner", nullable = false)
+	@JsonProperty(value = "owner")
+	private Boolean owner;
 	
 	@Column(name="o_name")
 	private String ownerName;
@@ -175,11 +177,11 @@ public class AgeDeclarationEntity {
 		this.date = date;
 	}
 
-	public boolean isOwner() {
+	public Boolean isOwner() {
 		return owner;
 	}
 
-	public void setOwner(boolean owner) {
+	public void setOwner(Boolean owner) {
 		this.owner = owner;
 	}
 
