@@ -36,8 +36,27 @@ CREATE TABLE IF NOT EXISTS logging_event_exception
     FOREIGN KEY (event_id) REFERENCES logging_event(event_id)
   );
 
+  CREATE TABLE IF NOT EXISTS roles (
+    role_id int NOT NULL AUTO_INCREMENT,
+    name varchar(255) UNIQUE,
+    PRIMARY KEY (role_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS service_cost_table (
+    id int NOT NULL AUTO_INCREMENT,
+    age_declaration int DEFAULT NULL,
+    change_of_name int DEFAULT NULL,
+    gift_deed int DEFAULT NULL,
+    missing_item int DEFAULT NULL,
+    notarize_document_per_page int DEFAULT NULL,
+    power_of_attorney int DEFAULT NULL,
+    user_type varchar(255) DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY UK_tlc6gafygkbey4wf1kxuqg17i (user_type)
+  );
+
+
     insert IGNORE into roles (name) values('SYSADMIN');
     insert IGNORE into roles (name) values('GENERAL USER');
-
     insert IGNORE into service_cost_table(age_declaration, change_of_name, gift_deed, missing_item, notarize_document_per_page, power_of_attorney, user_type) values('10000','10000','50000','10000','20000','100000','GENERAL USER');
 

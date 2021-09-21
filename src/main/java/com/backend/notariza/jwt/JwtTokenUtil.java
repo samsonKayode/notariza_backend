@@ -1,6 +1,8 @@
 package com.backend.notariza.jwt;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class JwtTokenUtil implements Serializable {
 
 	// for retrieveing any information from token we will need the secret key
 	private Claims getAllClaimsFromToken(String token) {
-		
+		//String secret = Base64.getEncoder().encodeToString(secrets.getBytes(StandardCharsets.UTF_8));
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}
 
@@ -69,6 +71,7 @@ public class JwtTokenUtil implements Serializable {
 //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
 //   compaction of the JWT to a URL-safe string 
 	private String doGenerateToken(Map<String, Object> claims, String subject) {
+		//String secret = Base64.getEncoder().encodeToString(secrets.getBytes(StandardCharsets.UTF_8));
 		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY ))
 				.signWith(SignatureAlgorithm.HS512, secret).compact();

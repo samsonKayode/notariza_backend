@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/v1/payment/verifytransaction/**", "/v1/service/changeofname/savetransaction/**",
 						"/v1/service/ageDeclaration/savetransaction/**", "/v1/service/giftdeed/savetransaction/**",
 						"/v1/service/notarizedocument/savetransaction/**")
-				.permitAll().antMatchers("/v1/service/**", "/v1/service/logs/**").hasAnyAuthority("USER", "SYSADMIN").antMatchers("/v1/**")
+				.permitAll().antMatchers("/v1/service/**", "/v1/service/logs/**").hasAnyAuthority("GENERAL USER", "SYSADMIN").antMatchers("/v1/**")
 				.hasAnyAuthority("SYSADMIN").antMatchers("/v1/admin/requests/**")
 				.hasAnyAuthority("NOTARY", "SUPPORT", "SYSADMIN").
 				// all other requests need to be authenticated

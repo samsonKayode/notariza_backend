@@ -166,7 +166,8 @@ public class AgeDeclarationService {
 
 			initializeTransactionResponse  = (InitializeTransactionResponse) responseEntity.getBody();
 
-		}catch (Exception exception){
+		}
+		catch (Exception exception){
 			log.error("Error initializing transaction: {}"+exception.getLocalizedMessage());
 			throw new RuntimeException("Error initializing transaction: {}"+exception.getLocalizedMessage());
 		}
